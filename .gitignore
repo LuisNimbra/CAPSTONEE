@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+venv/
+env/
+
+# ML models (large binary — deploy separately or train on first run)
+ml/models/*.pkl
+
+# PHP uploads
+peso-system/uploads/datasets/*.csv
+
+# XAMPP / OS
+.DS_Store
+Thumbs.db

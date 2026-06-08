@@ -1,11 +1,11 @@
 <?php
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'peso_dss');
-define('DB_USER', 'root');
-define('DB_PASS', '');
+define('DB_HOST',    getenv('DB_HOST')    ?: 'localhost');
+define('DB_NAME',    getenv('DB_NAME')    ?: 'peso_dss');
+define('DB_USER',    getenv('DB_USER')    ?: 'root');
+define('DB_PASS',    getenv('DB_PASS')    ?: '');
 define('DB_CHARSET', 'utf8mb4');
 
-define('ML_API_URL', 'http://localhost:5000');
+define('ML_API_URL', getenv('ML_API_URL') ?: 'http://localhost:5000');
 define('APP_NAME', 'PESO CSJDM DSS');
 define('UPLOAD_DIR', __DIR__ . '/../uploads/datasets/');
 
