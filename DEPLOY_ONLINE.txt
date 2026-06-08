@@ -1,0 +1,221 @@
+================================================================
+  PESO CSJDM DSS — Online Deployment Guide
+  Platform: Railway.app (Free)
+================================================================
+
+WHAT YOU WILL GET
+-----------------
+  A public URL like:  https://peso-web.up.railway.app
+  Anyone with internet can open it — no installation needed.
+  Both the web app AND the ML API will be live.
+
+
+WHAT YOU NEED BEFORE STARTING
+------------------------------
+  1. GitHub account — https://github.com (free)
+  2. Railway account — https://railway.app (free, sign in with GitHub)
+  3. GitHub Desktop (easiest) — https://desktop.github.com
+     OR Git installed — https://git-scm.com
+
+
+================================================================
+  PART 1 — PUSH CODE TO GITHUB (one-time setup)
+================================================================
+
+OPTION A — Using GitHub Desktop (Recommended for beginners)
+  1. Download and install GitHub Desktop
+  2. Sign in with your GitHub account
+  3. Click File > New Repository
+       Name: peso-dss
+       Local path: C:\CAPSTONEE
+       Click "Create Repository"
+  4. It will show all your files. Click "Commit to main"
+  5. Click "Publish repository"
+       Uncheck "Keep this code private" if you want it public
+       Click "Publish Repository"
+  6. Done — your code is now on GitHub
+
+OPTION B — Using Git commands (Command Prompt)
+  cd C:\CAPSTONEE
+  git init
+  git add .
+  git commit -m "Initial commit"
+  Then go to github.com, create a new repo called "peso-dss",
+  and follow the "push existing repo" instructions shown there.
+
+
+================================================================
+  PART 2 — DEPLOY ON RAILWAY
+================================================================
+
+STEP 1 — Create a Railway account
+  1. Go to https://railway.app
+  2. Click "Login" and sign in with GitHub
+  3. You will get $5 free credits per month (enough for this app)
+
+--------------------------------------------------------------
+STEP 2 — Deploy the MySQL Database
+--------------------------------------------------------------
+  1. On Railway dashboard, click "New Project"
+  2. Click "Deploy a template" or "Empty project"
+  3. Click "+ New" > "Database" > "Add MySQL"
+  4. Railway creates a MySQL instance automatically
+  5. Click on the MySQL service, go to "Variables" tab
+  6. Note down these values (you'll need them later):
+       MYSQL_HOST
+       MYSQL_USER
+       MYSQL_PASSWORD
+       MYSQL_DATABASE
+
+--------------------------------------------------------------
+STEP 3 — Deploy the PHP Web App
+--------------------------------------------------------------
+  1. In the same Railway project, click "+ New" > "GitHub Repo"
+  2. Select your "peso-dss" repo
+  3. When asked for the Root Directory, type:  peso-system
+  4. Railway will detect the Dockerfile automatically
+  5. Click "Deploy"
+  6. While deploying, go to "Variables" tab and add:
+       ML_API_URL = (leave blank for now, fill after Step 4)
+  7. The MySQL env vars (MYSQL_HOST, MYSQL_USER, etc.) are
+     auto-injected if both services are in the same project.
+     If not, copy them from the MySQL service variables.
+  8. Go to "Settings" > "Networking" > "Generate Domain"
+  9. Copy your public URL (e.g. https://peso-web.up.railway.app)
+
+--------------------------------------------------------------
+STEP 4 — Deploy the Python ML API
+--------------------------------------------------------------
+  1. Click "+ New" > "GitHub Repo" again
+  2. Select the same "peso-dss" repo
+  3. Root Directory: ml
+  4. Railway detects the Dockerfile automatically
+  5. Click "Deploy"
+  6. Go to "Settings" > "Networking" > "Generate Domain"
+  7. Copy the ML API URL (e.g. https://peso-ml.up.railway.app)
+
+--------------------------------------------------------------
+STEP 5 — Connect the ML API to the Web App
+--------------------------------------------------------------
+  1. Go back to the PHP web app service in Railway
+  2. Click "Variables" tab
+  3. Add/update:  ML_API_URL = https://peso-ml.up.railway.app
+  4. Railway will automatically redeploy with the new variable
+
+--------------------------------------------------------------
+STEP 6 — Run the Setup Wizard
+--------------------------------------------------------------
+  1. Open your web app URL in a browser:
+       https://peso-web.up.railway.app/peso-system/install.php
+  2. Step 1: Requirements check — should all pass
+  3. Step 2: Database settings
+       Host:     (use MYSQL_HOST value from Railway)
+       Database: (use MYSQL_DATABASE value from Railway)
+       Username: (use MYSQL_USER value from Railway)
+       Password: (use MYSQL_PASSWORD value from Railway)
+       ML URL:   https://peso-ml.up.railway.app
+  4. Step 3: Create your admin account
+  5. Step 4: Done!
+
+  Your system is now live at:
+  https://peso-web.up.railway.app/peso-system/login.php
+
+
+================================================================
+  PART 3 — SHARE THE LINK
+================================================================
+
+  Share this URL with anyone:
+    https://[your-app-name].up.railway.app/peso-system/login.php
+
+  They can access it from any device, anywhere.
+  No installation needed on their end.
+
+
+================================================================
+  UPDATING THE SYSTEM LATER
+================================================================
+
+  Whenever you make changes to the code:
+
+  Using GitHub Desktop:
+    1. Open GitHub Desktop
+    2. It shows your changed files
+    3. Write a commit message and click "Commit to main"
+    4. Click "Push origin"
+    5. Railway automatically redeploys within 1-2 minutes
+
+  Using Git commands:
+    git add .
+    git commit -m "describe your changes"
+    git push
+
+
+================================================================
+  TROUBLESHOOTING
+================================================================
+
+  "Application failed to respond"
+    → Check Railway dashboard for deploy logs
+    → Click on the service > "Deployments" > click the deploy
+    → Read the error in the build/deploy logs
+
+  Database connection error on install.php
+    → Double-check the MYSQL_* values from Railway Variables tab
+    → Make sure you copied them exactly (no extra spaces)
+
+  ML API not working
+    → Check if the ML service deployed successfully in Railway
+    → The system still works without it (uses fallback scoring)
+
+  Changes not showing after push
+    → Railway redeploys automatically — wait 1-2 minutes
+    → Check "Deployments" tab in Railway for status
+
+
+================================================================
+  COSTS
+================================================================
+
+  Railway free tier gives $5 of credits per month.
+  Estimated usage for this app: ~$2-3/month
+  (PHP service + ML service + MySQL = 3 services)
+
+  If credits run out:
+    → Upgrade to Railway Hobby plan ($5/month)
+    → Or use InfinityFree.net for free PHP+MySQL only
+      (ML API won't run but fallback scoring still works)
+
+
+================================================================
+  ALTERNATIVE: InfinityFree.net (PHP + MySQL only, Free Forever)
+================================================================
+
+  Use this if Railway is too complex or you don't need the ML API.
+
+  1. Go to https://infinityfree.net and create a free account
+  2. Create a new hosting account — you get a free subdomain
+     e.g. http://peso-csjdm.infinityfreeapp.com
+  3. Go to "File Manager" in their control panel
+  4. Upload all files from peso-system/ to the public_html/ folder
+     (use their file manager or FTP with FileZilla)
+  5. Go to "MySQL Databases" and create a new database
+  6. Note the Host, Database name, Username, and Password
+  7. Go to phpMyAdmin in their panel, select your database,
+     click Import, and upload database.sql
+  8. Visit: http://yoursite.infinityfreeapp.com/install.php
+  9. Enter the database credentials from step 6
+  10. Complete the wizard
+
+  Note: The ML API is not supported on InfinityFree.
+        The system automatically falls back to weighted scoring.
+
+
+================================================================
+  SUPPORT
+================================================================
+
+  Railway documentation: https://docs.railway.app
+  GitHub Desktop guide:  https://docs.github.com/desktop
+
+================================================================

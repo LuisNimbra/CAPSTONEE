@@ -1,0 +1,168 @@
+================================================================
+  PESO CSJDM — Skill Mapping & Job Referral DSS
+  Installation Guide
+================================================================
+
+SYSTEM REQUIREMENTS
+-------------------
+  - Windows 10/11
+  - XAMPP 8.x  (https://www.apachefriends.org)
+  - Python 3.10+  (https://www.python.org/downloads)
+  - Modern web browser (Chrome, Edge, Firefox)
+
+
+WHAT'S IN THIS PACKAGE
+-----------------------
+  peso-system/   — PHP web application (copy to XAMPP)
+  ml/            — Python Flask ML API
+  database.sql   — Database schema & sample data
+  start_ml_api.bat — Starts the ML API server
+  INSTALL.txt    — This file
+
+
+================================================================
+  OPTION A — SAME MACHINE (Recommended for Demo / Capstone)
+================================================================
+
+STEP 1 — Install XAMPP
+  1. Download and install XAMPP from https://www.apachefriends.org
+  2. Open XAMPP Control Panel
+  3. Start Apache and MySQL (both must show green)
+
+STEP 2 — Copy the web app
+  1. Copy the entire "peso-system" folder to:
+       C:\xampp\htdocs\peso-system\
+  2. The folder structure should look like:
+       C:\xampp\htdocs\peso-system\login.php
+       C:\xampp\htdocs\peso-system\config\db.php
+       ... etc.
+
+STEP 3 — Run the web installer
+  1. Open your browser and go to:
+       http://localhost/peso-system/install.php
+  2. Follow the 4-step wizard:
+       Step 1: Requirements check (all green = OK)
+       Step 2: Database setup (use defaults for XAMPP)
+       Step 3: Create your admin account
+       Step 4: Done!
+
+STEP 4 — Start the ML API (optional but recommended)
+  1. Install Python 3.10+ if not already installed
+  2. Double-click: start_ml_api.bat
+  3. Keep that window open while using the system
+  4. The ML API runs at http://localhost:5000
+     (If not running, the system uses a fallback scoring method)
+
+STEP 5 — Log in
+  1. Go to: http://localhost/peso-system/login.php
+  2. Use the admin credentials you set in Step 3
+
+
+================================================================
+  OPTION B — LOCAL NETWORK (Office / Multiple Users)
+================================================================
+
+One machine acts as the server; others use it via browser.
+
+  SERVER MACHINE (the host):
+    1. Follow Option A steps 1-4 on the server machine
+    2. Find your local IP address:
+       - Open Command Prompt and type: ipconfig
+       - Look for "IPv4 Address" e.g. 192.168.1.100
+    3. Make sure Windows Firewall allows port 80 (Apache)
+       - Control Panel > Windows Defender Firewall
+       - Advanced Settings > Inbound Rules > New Rule
+       - Port 80, Allow the connection
+
+  CLIENT MACHINES (other users):
+    - Open a browser and go to:
+        http://192.168.1.100/peso-system/login.php
+      (replace 192.168.1.100 with the server's IP)
+    - No installation needed on client machines!
+
+
+================================================================
+  OPTION C — FREE CLOUD HOSTING (Access from Anywhere)
+================================================================
+
+Use Railway (https://railway.app) — free tier available.
+Requires a GitHub account.
+
+  1. Push the peso-system folder to a GitHub repository
+  2. Go to railway.app and create a new project
+  3. Deploy from GitHub repository
+  4. Add a MySQL service in Railway dashboard
+  5. Set environment variables (DB_HOST, DB_NAME, DB_USER, DB_PASS)
+  6. For the ML API: add a second service from the ml/ folder
+  7. Update ML_API_URL to point to the Railway ML service URL
+
+  Note: Railway free tier has usage limits. For a capstone
+  presentation, Option A or B is more reliable.
+
+
+================================================================
+  RESETTING / REINSTALLING
+================================================================
+
+  To reinstall on a machine that already has it:
+    1. Delete: C:\xampp\htdocs\peso-system\install.lock
+    2. Delete: C:\xampp\htdocs\peso-system\config\local.php
+    3. Go to: http://localhost/peso-system/install.php
+    4. Warning: Step 2 will DROP and recreate the database.
+       All existing data will be lost.
+
+
+================================================================
+  DEFAULT SAMPLE DATA
+================================================================
+
+  After installation, the system includes:
+    - 8 sample applicants with skills
+    - 5 sample job vacancies
+    - 3 sample placements
+    - 1 admin account (credentials set during install)
+
+
+================================================================
+  TROUBLESHOOTING
+================================================================
+
+  "No connection" error
+    → Make sure MySQL is Started in XAMPP Control Panel
+
+  "Invalid credentials" on login
+    → Run the installer again (delete install.lock first)
+    → Or use phpMyAdmin to verify the users table
+
+  ML API not working
+    → Start start_ml_api.bat and keep it running
+    → System still works without it (uses fallback scoring)
+
+  Port 80 in use (Apache won't start)
+    → Change Apache port in XAMPP Config or stop IIS/Skype
+
+  uploads/ folder permission error
+    → Right-click uploads/datasets/ > Properties > Security
+    → Give the current user Full Control
+
+
+================================================================
+  SECURITY NOTES (Before Public Deployment)
+================================================================
+
+  1. Change the admin password to something strong
+  2. Delete install.php after setup (or it auto-locks)
+  3. Change default MySQL root password
+  4. In production, set DB credentials in config/local.php
+     and restrict file permissions
+
+
+================================================================
+  CONTACT / SUPPORT
+================================================================
+
+  System developed as a capstone project for:
+  BS Information Technology — Bulacan State University
+  PESO City of San Jose del Monte, Bulacan
+
+================================================================

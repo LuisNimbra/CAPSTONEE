@@ -1,0 +1,96 @@
+:root {
+  --peso-blue:   #0d47a1;
+  --peso-light:  #e8f0fe;
+  --sidebar-bg:  #1a1a2e;
+  --card-radius: 12px;
+}
+
+/* ── Layout ── */
+body { font-family: 'Segoe UI', sans-serif; background: #f4f6fb; }
+
+#sidebar .nav-link {
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-bottom: 2px;
+  transition: background .15s;
+}
+#sidebar .nav-link:hover  { background: rgba(255,255,255,.1); }
+#sidebar .nav-link.active { background: #0d47a1; font-weight: 600; }
+
+/* ── Cards ── */
+.stat-card {
+  border: none;
+  border-radius: var(--card-radius);
+  box-shadow: 0 2px 12px rgba(0,0,0,.07);
+  transition: transform .15s, box-shadow .15s;
+}
+.stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0,0,0,.12);
+}
+.stat-card .icon-wrap {
+  width: 52px; height: 52px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem;
+}
+
+/* ── Tables ── */
+.table-hover tbody tr:hover { background: var(--peso-light); }
+.table th { font-size: .8rem; text-transform: uppercase; letter-spacing: .05em; }
+
+/* ── Score badge ── */
+.score-badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: .8rem;
+  font-weight: 600;
+}
+.score-high  { background:#d4edda; color:#155724; }
+.score-mid   { background:#fff3cd; color:#856404; }
+.score-low   { background:#f8d7da; color:#721c24; }
+
+/* ── Progress bars ── */
+.skill-bar { height: 8px; border-radius: 4px; }
+
+/* ── Page header ── */
+.page-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+.page-header h4 { margin: 0; font-weight: 700; color: #1a1a2e; }
+
+/* ── Login page ── */
+.login-wrapper {
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, #0d47a1 0%, #1565c0 60%, #1976d2 100%);
+}
+.login-card {
+  width: 100%; max-width: 420px;
+  border: none; border-radius: 16px;
+  box-shadow: 0 16px 48px rgba(0,0,0,.25);
+}
+
+/* ── Alert toast ── */
+#toastContainer { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 9999; }
+
+/* ── Heat map cell ── */
+.heatmap-cell {
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .8rem; font-weight: 600;
+  transition: opacity .2s;
+}
+
+/* ── Rank badge ── */
+.rank-1 { background: #ffd700; color: #333; }
+.rank-2 { background: #c0c0c0; color: #333; }
+.rank-3 { background: #cd7f32; color: #fff; }
+.rank-n { background: #e9ecef; color: #555; }
+
+/* ── Responsive tweaks ── */
+@media (max-width: 768px) {
+  #sidebar { display: none; }
+}
