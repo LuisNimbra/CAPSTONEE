@@ -4,5 +4,6 @@ if (session_status() === PHP_SESSION_NONE) session_start();
 logActivity('Logout', 'Auth', 'User logged out');
 $_SESSION = [];
 session_destroy();
-header('Location: /peso-system/login.php');
+header('Location: /login.php');
 exit;
+

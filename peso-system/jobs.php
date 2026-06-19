@@ -30,13 +30,13 @@ $totals = db()->query("SELECT COUNT(*) total,
     SUM(status='inactive') inactive
     FROM job_vacancies")->fetch();
 
-$pageTitle = 'Job Vacancies — PESO CSJDM DSS';
+$pageTitle = 'Job Vacancies "” PESO CSJDM DSS';
 require_once __DIR__ . '/includes/header.php';
 ?>
 
 <div class="page-header">
   <h4><i class="bi bi-briefcase me-2 text-primary"></i>Job Vacancy Management</h4>
-  <a href="/peso-system/job_add.php" class="btn btn-primary btn-sm">
+  <a href="/job_add.php" class="btn btn-primary btn-sm">
     <i class="bi bi-plus-lg me-1"></i>Add Vacancy
   </a>
 </div>
@@ -64,7 +64,7 @@ require_once __DIR__ . '/includes/header.php';
     <input type="text" id="searchInput" class="form-control form-control-sm"
            placeholder="Search by title, company…" style="max-width:300px;">
     <?php if ($statusFilter): ?>
-    <a href="/peso-system/jobs.php" class="btn btn-outline-secondary btn-sm">Clear filter</a>
+    <a href="/jobs.php" class="btn btn-outline-secondary btn-sm">Clear filter</a>
     <?php endif; ?>
   </div>
 
@@ -85,7 +85,7 @@ require_once __DIR__ . '/includes/header.php';
           <small class="text-muted"><?= $j['skill_count'] ?> required skills</small>
         </td>
         <td><?= h($j['company']) ?></td>
-        <td><?= h($j['required_education'] ?? '—') ?></td>
+        <td><?= h($j['required_education'] ?? '"”') ?></td>
         <td><?= formatSalary($j['salary_min'], $j['salary_max']) ?></td>
         <td><?= $j['slots'] ?></td>
         <td><span class="badge bg-info text-dark"><?= $j['match_count'] ?></span></td>
@@ -94,10 +94,10 @@ require_once __DIR__ . '/includes/header.php';
           <span class="badge bg-<?= $sc ?>"><?= ucfirst($j['status']) ?></span>
         </td>
         <td>
-          <a href="/peso-system/job_view.php?id=<?= $j['id'] ?>" class="btn btn-sm btn-outline-primary" title="View"><i class="bi bi-eye"></i></a>
-          <a href="/peso-system/job_edit.php?id=<?= $j['id'] ?>" class="btn btn-sm btn-outline-secondary" title="Edit"><i class="bi bi-pencil"></i></a>
-          <a href="/peso-system/matching.php?job_id=<?= $j['id'] ?>" class="btn btn-sm btn-outline-success" title="Generate Matches"><i class="bi bi-cpu"></i></a>
-          <a href="/peso-system/api/jobs.php?action=delete&id=<?= $j['id'] ?>"
+          <a href="/job_view.php?id=<?= $j['id'] ?>" class="btn btn-sm btn-outline-primary" title="View"><i class="bi bi-eye"></i></a>
+          <a href="/job_edit.php?id=<?= $j['id'] ?>" class="btn btn-sm btn-outline-secondary" title="Edit"><i class="bi bi-pencil"></i></a>
+          <a href="/matching.php?job_id=<?= $j['id'] ?>" class="btn btn-sm btn-outline-success" title="Generate Matches"><i class="bi bi-cpu"></i></a>
+          <a href="/api/jobs.php?action=delete&id=<?= $j['id'] ?>"
              class="btn btn-sm btn-outline-danger"
              data-confirm="Delete this job vacancy? All related recommendations will also be removed." title="Delete">
             <i class="bi bi-trash"></i>
@@ -115,3 +115,4 @@ require_once __DIR__ . '/includes/header.php';
 
 <script>initTableSearch('searchInput','jobTable');</script>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
+

@@ -4,7 +4,7 @@ require_once __DIR__ . '/config/db.php';
 
 if (session_status() === PHP_SESSION_NONE) session_start();
 if (!empty($_SESSION['user_id'])) {
-    header('Location: /peso-system/dashboard.php');
+    header('Location: /dashboard.php');
     exit;
 }
 
@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ];
             db()->prepare('UPDATE users SET last_login = NOW() WHERE id = ?')->execute([$user['id']]);
             logActivity('Login', 'Auth', 'Successful login');
-            header('Location: /peso-system/dashboard.php');
+            header('Location: /dashboard.php');
             exit;
         } else {
             $error = 'Invalid credentials. Please try again.';
@@ -45,10 +45,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Login — PESO CSJDM DSS</title>
+<title>Login "” PESO CSJDM DSS</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-<link rel="stylesheet" href="/peso-system/assets/css/style.css">
+<link rel="stylesheet" href="/assets/css/style.css">
 </head>
 <body>
 <div class="login-wrapper">
@@ -97,3 +97,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+

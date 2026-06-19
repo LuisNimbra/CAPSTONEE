@@ -6,13 +6,30 @@ requireLogin();
 
 // Handle refer action via GET
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && ($_GET['action'] ?? '') === 'refer') {
-    $id = (int)($_GET['id'] ?? 0);
-    db()->prepare("UPDATE recommendations SET status='referred' WHERE id=?")->execute([$id]);
-    $rec = db()->prepare('SELECT job_id FROM recommendations WHERE id=?');
+    $id  = (int)($_GET['id'] ?? 0);
+    $pdo = db();
+    $pdo->prepare("UPDATE recommendations SET status='referred' WHERE id=?")->execute([$id]);
+
+    $rec = $pdo->prepare('SELECT applicant_id, job_id FROM recommendations WHERE id=?');
     $rec->execute([$id]);
     $r = $rec->fetch();
-    logActivity('Refer Applicant', 'Matching', "Referred recommendation ID: $id");
-    header('Location: /peso-system/job_view.php?id=' . ($r['job_id'] ?? 0) . '&referred=1');
+
+    // Record referral in referrals table for outcome tracking
+    if ($r) {
+        $pdo->prepare("
+            INSERT INTO referrals (applicant_id, job_id, referral_date, outcome, created_by)
+            VALUES (?,?,?,?,?)
+        ")->execute([
+            $r['applicant_id'],
+            $r['job_id'],
+            date('Y-m-d'),
+            'Pending',
+            $_SESSION['user_id'],
+        ]);
+    }
+
+    logActivity('Refer Applicant', 'Matching', "Referred recommendation ID: $id, Job ID: " . ($r['job_id'] ?? 0));
+    header('Location: /job_view.php?id=' . ($r['job_id'] ?? 0) . '&referred=1');
     exit;
 }
 
@@ -132,10 +149,6 @@ if ($action === 'generate') {
 
     logActivity('Generate Matches', 'Matching', "Job ID: $jobId, Algorithm: $algorithm");
 
-    ob_start();
-    require_once __DIR__ . '/../matching.php';
-    ob_end_clean();
-
     // Build HTML inline
     $html = buildResultsHtml($recRows);
     jsonResponse([
@@ -161,15 +174,16 @@ function buildResultsHtml(array $rows): string {
         $missing = !empty($exp['missing_skills']) ? '<br><small class="text-danger"><i class="bi bi-x-circle me-1"></i>' . implode(', ', array_map('htmlspecialchars', $exp['missing_skills'])) . '</small>' : '';
         $html .= "<tr>
             <td><span class='badge {$rankCls}'>#$rankN</span></td>
-            <td><a href='/peso-system/applicant_view.php?id={$r['applicant_id']}' class='fw-semibold text-decoration-none'>" . htmlspecialchars($r['first_name'] . ' ' . $r['last_name']) . "</a></td>
+            <td><a href='/applicant_view.php?id={$r['applicant_id']}' class='fw-semibold text-decoration-none'>" . htmlspecialchars($r['first_name'] . ' ' . $r['last_name']) . "</a></td>
             <td>" . htmlspecialchars($r['education_level']) . "</td>
             <td>{$r['years_experience']}yr</td>
             <td><span class='score-badge {$cls}'>{$pct}%</span><div class='progress mt-1 skill-bar'><div class='progress-bar bg-primary' style='width:{$pct}%'></div></div></td>
             <td style='max-width:200px'>$matched$missing</td>
             <td><span class='badge bg-secondary'>pending</span></td>
-            <td><a href='/peso-system/api/matching.php?action=refer&id={$r['id']}' class='btn btn-sm btn-outline-success'>Refer</a></td>
+            <td><a href='/api/matching.php?action=refer&id={$r['id']}' class='btn btn-sm btn-outline-success'>Refer</a></td>
           </tr>";
     }
     $html .= '</tbody></table></div>';
     return $html;
 }
+

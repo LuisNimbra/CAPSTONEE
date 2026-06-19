@@ -11,8 +11,9 @@ if ($action === 'delete') {
     db()->prepare('DELETE FROM recommendations WHERE job_id = ?')->execute([$id]);
     db()->prepare('DELETE FROM job_vacancies WHERE id = ?')->execute([$id]);
     logActivity('Delete Job', 'Jobs', "Deleted job ID: $id");
-    header('Location: /peso-system/jobs.php?deleted=1');
+    header('Location: /jobs.php?deleted=1');
     exit;
 }
 
 jsonResponse(['error' => 'Unknown action'], 400);
+

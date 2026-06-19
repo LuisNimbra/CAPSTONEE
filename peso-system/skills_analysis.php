@@ -51,7 +51,7 @@ $actual = $pdo->query("
     GROUP BY position ORDER BY cnt DESC LIMIT 8
 ")->fetchAll();
 
-$pageTitle = 'Skills & Experience Analysis — PESO CSJDM DSS';
+$pageTitle = 'Skills & Experience Analysis "” PESO CSJDM DSS';
 require_once __DIR__ . '/includes/header.php';
 ?>
 
@@ -146,3 +146,4 @@ new Chart(document.getElementById('actualChart'), {
 </script>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
+

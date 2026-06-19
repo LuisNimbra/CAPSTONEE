@@ -5,11 +5,17 @@ require_once __DIR__ . '/includes/functions.php';
 requireLogin();
 
 $statusFilter = $_GET['status'] ?? '';
+$sectorFilter = $_GET['sector'] ?? '';
 $params = [];
 $where  = 'WHERE 1=1';
+
 if (in_array($statusFilter, ['active','placed','inactive'])) {
     $where .= ' AND a.status = ?';
     $params[] = $statusFilter;
+}
+if (in_array($sectorFilter, SECTORS) && $sectorFilter !== 'None') {
+    $where .= ' AND a.sector = ?';
+    $params[] = $sectorFilter;
 }
 
 $applicants = db()->prepare("
@@ -30,13 +36,19 @@ $totals = db()->query("SELECT
     SUM(status='inactive') inactive
     FROM applicants")->fetch();
 
+// Sector count for filter pills
+$sectorCounts = db()->query("
+    SELECT sector, COUNT(*) cnt FROM applicants
+    WHERE sector != 'None' GROUP BY sector ORDER BY cnt DESC
+")->fetchAll(PDO::FETCH_KEY_PAIR);
+
 $pageTitle = 'Applicants — PESO CSJDM DSS';
 require_once __DIR__ . '/includes/header.php';
 ?>
 
 <div class="page-header">
   <h4><i class="bi bi-people me-2 text-primary"></i>Applicant Management</h4>
-  <a href="/peso-system/applicant_add.php" class="btn btn-primary btn-sm">
+  <a href="/applicant_add.php" class="btn btn-primary btn-sm">
     <i class="bi bi-plus-lg me-1"></i>Add Applicant
   </a>
 </div>
@@ -61,19 +73,37 @@ require_once __DIR__ . '/includes/header.php';
 </div>
 
 <div class="card stat-card p-3">
-  <div class="d-flex gap-2 mb-3">
-    <input type="text" id="searchInput" class="form-control form-control-sm" placeholder="Search by name, email or skills…" style="max-width:300px;">
-    <?php if ($statusFilter): ?>
-    <a href="/peso-system/applicants.php" class="btn btn-outline-secondary btn-sm">Clear filter</a>
+  <!-- Filters -->
+  <div class="d-flex flex-wrap gap-2 mb-3 align-items-center">
+    <input type="text" id="searchInput" class="form-control form-control-sm"
+           placeholder="Search by name, email, position…" style="max-width:260px;">
+
+    <select id="sectorSelect" class="form-select form-select-sm" style="max-width:180px;"
+            onchange="window.location='?status=<?= urlencode($statusFilter) ?>&sector='+this.value">
+      <option value="">All Sectors</option>
+      <?php foreach (SECTORS as $sec): ?>
+        <?php if ($sec === 'None') continue; ?>
+      <option value="<?= $sec ?>" <?= $sectorFilter === $sec ? 'selected' : '' ?>>
+        <?= $sec ?><?= isset($sectorCounts[$sec]) ? ' (' . $sectorCounts[$sec] . ')' : '' ?>
+      </option>
+      <?php endforeach; ?>
+    </select>
+
+    <?php if ($statusFilter || $sectorFilter): ?>
+    <a href="/applicants.php" class="btn btn-outline-secondary btn-sm">
+      <i class="bi bi-x-lg me-1"></i>Clear filters
+    </a>
     <?php endif; ?>
+
+    <span class="text-muted small ms-auto"><?= count($list) ?> applicant<?= count($list) != 1 ? 's' : '' ?></span>
   </div>
 
   <div class="table-responsive">
     <table class="table table-hover align-middle" id="applicantTable">
       <thead class="table-light">
         <tr>
-          <th>#</th><th>Name</th><th>Education</th><th>Experience</th>
-          <th>Skills</th><th>Preferred Position</th><th>Status</th><th>Actions</th>
+          <th>#</th><th>Name</th><th>Sector</th><th>Education</th>
+          <th>Experience</th><th>Skills</th><th>Preferred Position</th><th>Status</th><th>Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -82,8 +112,9 @@ require_once __DIR__ . '/includes/header.php';
         <td class="text-muted small"><?= $i + 1 ?></td>
         <td>
           <div class="fw-semibold"><?= h($a['first_name'] . ' ' . $a['last_name']) ?></div>
-          <small class="text-muted"><?= h($a['email'] ?? '') ?></small>
+          <small class="text-muted"><?= h($a['barangay'] ?? '') ?></small>
         </td>
+        <td><?= sectorBadge($a['sector'] ?? 'None') ?></td>
         <td>
           <div><?= h($a['education_level']) ?></div>
           <small class="text-muted"><?= h($a['course'] ?? '') ?></small>
@@ -96,9 +127,9 @@ require_once __DIR__ . '/includes/header.php';
           <span class="badge bg-<?= $sc ?>"><?= ucfirst($a['status']) ?></span>
         </td>
         <td>
-          <a href="/peso-system/applicant_view.php?id=<?= $a['id'] ?>" class="btn btn-sm btn-outline-primary" title="View"><i class="bi bi-eye"></i></a>
-          <a href="/peso-system/applicant_edit.php?id=<?= $a['id'] ?>" class="btn btn-sm btn-outline-secondary" title="Edit"><i class="bi bi-pencil"></i></a>
-          <a href="/peso-system/api/applicants.php?action=delete&id=<?= $a['id'] ?>"
+          <a href="/applicant_view.php?id=<?= $a['id'] ?>" class="btn btn-sm btn-outline-primary" title="View"><i class="bi bi-eye"></i></a>
+          <a href="/applicant_edit.php?id=<?= $a['id'] ?>" class="btn btn-sm btn-outline-secondary" title="Edit"><i class="bi bi-pencil"></i></a>
+          <a href="/api/applicants.php?action=delete&id=<?= $a['id'] ?>"
              class="btn btn-sm btn-outline-danger"
              data-confirm="Delete this applicant? This cannot be undone." title="Delete">
             <i class="bi bi-trash"></i>
@@ -107,7 +138,7 @@ require_once __DIR__ . '/includes/header.php';
       </tr>
       <?php endforeach; ?>
       <?php if (empty($list)): ?>
-      <tr><td colspan="8" class="text-center text-muted py-4">No applicants found.</td></tr>
+      <tr><td colspan="9" class="text-center text-muted py-4">No applicants found.</td></tr>
       <?php endif; ?>
       </tbody>
     </table>

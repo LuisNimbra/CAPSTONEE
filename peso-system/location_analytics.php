@@ -27,19 +27,27 @@ $totalPlaced    = array_sum(array_column($barangayData, 'cnt'));
 $topBarangay    = $barangayData[0] ?? null;
 $avgPerBarangay = $totalBarangays > 0 ? round($totalPlaced / $totalBarangays, 1) : 0;
 
-$pageTitle = 'Location Analytics — PESO CSJDM DSS';
+$pageTitle = 'Location Analytics "” PESO CSJDM DSS';
 require_once __DIR__ . '/includes/header.php';
 ?>
 
 <div class="page-header">
   <h4><i class="bi bi-geo-alt me-2 text-primary"></i>Location Analytics</h4>
-  <small class="text-muted">San Jose del Monte, Bulacan</small>
+  <div class="d-flex gap-2 align-items-center">
+    <small class="text-muted">San Jose del Monte, Bulacan</small>
+    <button class="btn btn-outline-success btn-sm no-print" onclick="exportTableExcel('barangayTable','Barangay_Placements')">
+      <i class="bi bi-file-earmark-excel me-1"></i>Export Excel
+    </button>
+    <button class="btn btn-outline-secondary btn-sm no-print" onclick="window.print()">
+      <i class="bi bi-printer me-1"></i>Print
+    </button>
+  </div>
 </div>
 
 <!-- Summary cards -->
 <div class="row g-3 mb-4">
   <?php foreach ([
-    ['Highest Placement Area',  $topBarangay ? h($topBarangay['barangay']) . ' (' . $topBarangay['cnt'] . ')' : '—', 'geo-alt-fill', 'success'],
+    ['Highest Placement Area',  $topBarangay ? h($topBarangay['barangay']) . ' (' . $topBarangay['cnt'] . ')' : '"”', 'geo-alt-fill', 'success'],
     ['Total Barangays Covered', $totalBarangays, 'map-fill', 'primary'],
     ['Total Placements',        $totalPlaced,    'award-fill','warning'],
     ['Avg. Placements / Brgy',  $avgPerBarangay, 'calculator','info'],
@@ -60,7 +68,7 @@ require_once __DIR__ . '/includes/header.php';
   <!-- Heatmap (simulated grid) -->
   <div class="col-md-7">
     <div class="card stat-card p-3">
-      <h6 class="fw-semibold mb-3"><i class="bi bi-grid-3x3-gap me-2 text-primary"></i>Barangay Heat Map — Placements</h6>
+      <h6 class="fw-semibold mb-3"><i class="bi bi-grid-3x3-gap me-2 text-primary"></i>Barangay Heat Map "” Placements</h6>
       <?php if ($barangayData):
         $maxCnt = max(array_column($barangayData, 'cnt'));
       ?>
@@ -101,7 +109,7 @@ require_once __DIR__ . '/includes/header.php';
 <div class="card stat-card p-3">
   <h6 class="fw-semibold mb-3"><i class="bi bi-table me-2 text-primary"></i>Placement Details by Barangay</h6>
   <div class="table-responsive">
-    <table class="table table-sm table-hover">
+    <table class="table table-sm table-hover" id="barangayTable">
       <thead><tr><th>#</th><th>Barangay</th><th>Placements</th><th>Share</th><th>Distribution</th></tr></thead>
       <tbody>
       <?php foreach ($barangayData as $i => $b):
@@ -126,6 +134,13 @@ require_once __DIR__ . '/includes/header.php';
 </div>
 
 <script>
+function exportTableExcel(tableId, sheetName) {
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.table_to_sheet(document.getElementById(tableId), {raw: true});
+    XLSX.utils.book_append_sheet(wb, ws, sheetName);
+    XLSX.writeFile(wb, sheetName + '_' + new Date().toISOString().slice(0,10) + '.xlsx');
+}
+
 new Chart(document.getElementById('appBarangayChart'), {
   type: 'bar',
   data: {
@@ -137,3 +152,4 @@ new Chart(document.getElementById('appBarangayChart'), {
 </script>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
+

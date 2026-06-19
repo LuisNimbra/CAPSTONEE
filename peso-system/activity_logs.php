@@ -25,7 +25,7 @@ $moduleCounts = $pdo->query("
     SELECT module, COUNT(*) cnt FROM activity_logs GROUP BY module ORDER BY cnt DESC
 ")->fetchAll();
 
-$pageTitle = 'Activity Logs — PESO CSJDM DSS';
+$pageTitle = 'Activity Logs "” PESO CSJDM DSS';
 require_once __DIR__ . '/includes/header.php';
 ?>
 
@@ -40,7 +40,7 @@ require_once __DIR__ . '/includes/header.php';
       <h6 class="fw-semibold mb-3"><i class="bi bi-hdd-stack me-2 text-primary"></i>System Status</h6>
       <?php
       $statusItems = [
-        ['ML Model',    $mlOk,  $mlOk  ? ($mlStatus['model'] ?? 'Active') : 'Offline — start Flask API', 'cpu'],
+        ['ML Model',    $mlOk,  $mlOk  ? ($mlStatus['model'] ?? 'Active') : 'Offline "” start Flask API', 'cpu'],
         ['Database',    $dbOk,  $dbOk  ? 'Connected (MySQL)'           : 'Connection failed',            'database'],
         ['Sync Status', true,   'Running',                                                                 'arrow-repeat'],
       ];
@@ -70,10 +70,10 @@ require_once __DIR__ . '/includes/header.php';
     <div class="card stat-card p-3">
       <h6 class="fw-semibold mb-3"><i class="bi bi-lightning me-2 text-primary"></i>Quick Actions</h6>
       <div class="d-grid gap-2">
-        <a href="/peso-system/applicants.php" class="btn btn-outline-primary btn-sm"><i class="bi bi-people me-2"></i>Manage Applicants</a>
-        <a href="/peso-system/jobs.php" class="btn btn-outline-primary btn-sm"><i class="bi bi-briefcase me-2"></i>Manage Job Vacancies</a>
-        <a href="/peso-system/matching.php" class="btn btn-outline-success btn-sm"><i class="bi bi-cpu me-2"></i>AI Job Matching</a>
-        <a href="/peso-system/dataset_upload.php" class="btn btn-outline-warning btn-sm"><i class="bi bi-cloud-upload me-2"></i>Upload Dataset / Train ML</a>
+        <a href="/applicants.php" class="btn btn-outline-primary btn-sm"><i class="bi bi-people me-2"></i>Manage Applicants</a>
+        <a href="/jobs.php" class="btn btn-outline-primary btn-sm"><i class="bi bi-briefcase me-2"></i>Manage Job Vacancies</a>
+        <a href="/matching.php" class="btn btn-outline-success btn-sm"><i class="bi bi-cpu me-2"></i>AI Job Matching</a>
+        <a href="/dataset_upload.php" class="btn btn-outline-warning btn-sm"><i class="bi bi-cloud-upload me-2"></i>Upload Dataset / Train ML</a>
       </div>
     </div>
   </div>
@@ -125,3 +125,4 @@ require_once __DIR__ . '/includes/header.php';
 
 <script>initTableSearch('logSearch','logTable');</script>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
+

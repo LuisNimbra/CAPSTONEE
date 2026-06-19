@@ -6,13 +6,14 @@ requireLogin();
 
 $pdo = db();
 
-$totalApplicants  = $pdo->query('SELECT COUNT(*) FROM applicants WHERE status != "inactive"')->fetchColumn();
-$activeApplicants = $pdo->query('SELECT COUNT(*) FROM applicants WHERE status = "active"')->fetchColumn();
-$placedApplicants = $pdo->query('SELECT COUNT(*) FROM applicants WHERE status = "placed"')->fetchColumn();
-$activeJobs       = $pdo->query('SELECT COUNT(*) FROM job_vacancies WHERE status = "active"')->fetchColumn();
-$totalJobs        = $pdo->query('SELECT COUNT(*) FROM job_vacancies')->fetchColumn();
-$totalPlacements  = $pdo->query('SELECT COUNT(*) FROM placements')->fetchColumn();
-$pendingMatches   = $pdo->query('SELECT COUNT(*) FROM recommendations WHERE status = "pending"')->fetchColumn();
+$totalApplicants    = $pdo->query('SELECT COUNT(*) FROM applicants WHERE status != "inactive"')->fetchColumn();
+$activeApplicants   = $pdo->query('SELECT COUNT(*) FROM applicants WHERE status = "active"')->fetchColumn();
+$placedApplicants   = $pdo->query('SELECT COUNT(*) FROM applicants WHERE status = "placed"')->fetchColumn();
+$activeJobs         = $pdo->query('SELECT COUNT(*) FROM job_vacancies WHERE status = "active"')->fetchColumn();
+$totalPlacements    = $pdo->query('SELECT COUNT(*) FROM placements')->fetchColumn();
+$pendingMatches     = $pdo->query('SELECT COUNT(*) FROM recommendations WHERE status = "pending"')->fetchColumn();
+$awaitingConfirm    = $pdo->query('SELECT COUNT(*) FROM placements WHERE employer_confirmation = "Pending"')->fetchColumn();
+$pendingReferrals   = $pdo->query('SELECT COUNT(*) FROM referrals WHERE outcome = "Pending"')->fetchColumn();
 
 // Monthly placements for chart (last 6 months)
 $monthlyData = $pdo->query("
@@ -43,7 +44,7 @@ $recentLogs = $pdo->query("
 // ML model status
 $mlStatus = mlApiGet('/status');
 
-$pageTitle = 'Dashboard — PESO CSJDM DSS';
+$pageTitle = 'Dashboard "” PESO CSJDM DSS';
 require_once __DIR__ . '/includes/header.php';
 ?>
 
@@ -56,15 +57,17 @@ require_once __DIR__ . '/includes/header.php';
 <div class="row g-3 mb-4">
   <?php
   $stats = [
-    ['Total Applicants',   $totalApplicants,  'people-fill',        'primary'],
-    ['Active Applicants',  $activeApplicants,  'person-check-fill',  'success'],
-    ['Placed',             $placedApplicants,  'award-fill',         'warning'],
-    ['Active Vacancies',   $activeJobs,        'briefcase-fill',     'info'],
-    ['Total Placements',   $totalPlacements,   'check2-circle',      'success'],
-    ['Pending Matches',    $pendingMatches,    'cpu-fill',           'secondary'],
+    ['Total Applicants',        $totalApplicants,  'people-fill',        'primary'],
+    ['Active Applicants',       $activeApplicants,  'person-check-fill',  'success'],
+    ['Placed',                  $placedApplicants,  'award-fill',         'warning'],
+    ['Active Vacancies',        $activeJobs,        'briefcase-fill',     'info'],
+    ['Total Placements',        $totalPlacements,   'check2-circle',      'success'],
+    ['Awaiting Confirmation',   $awaitingConfirm,   'hourglass-split',    'danger'],
+    ['Pending Referrals',       $pendingReferrals,  'send-fill',          'secondary'],
+    ['Pending ML Matches',      $pendingMatches,    'cpu-fill',           'secondary'],
   ];
   foreach ($stats as [$label, $val, $icon, $color]): ?>
-  <div class="col-6 col-md-4 col-xl-2">
+  <div class="col-6 col-md-4 col-xl-3">
     <div class="card stat-card p-3">
       <div class="d-flex align-items-center gap-3">
         <div class="icon-wrap bg-<?= $color ?> bg-opacity-10 text-<?= $color ?>">
@@ -179,3 +182,4 @@ new Chart(document.getElementById('jobsChart'), {
 </script>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
+

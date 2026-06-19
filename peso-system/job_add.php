@@ -34,19 +34,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         foreach ($skills as $skill) $skillStmt->execute([$jobId, $skill]);
 
         logActivity('Add Job', 'Jobs', "Added: {$f['job_title']}");
-        header('Location: /peso-system/jobs.php?added=1');
+        header('Location: /jobs.php?added=1');
         exit;
     }
 }
 
 $eduLevels = ['Elementary','High School','Vocational','College','Post-Graduate'];
-$pageTitle  = 'Add Job Vacancy — PESO CSJDM DSS';
+$pageTitle  = 'Add Job Vacancy "” PESO CSJDM DSS';
 require_once __DIR__ . '/includes/header.php';
 ?>
 
 <div class="page-header">
   <h4><i class="bi bi-briefcase-fill me-2 text-primary"></i>Add Job Vacancy</h4>
-  <a href="/peso-system/jobs.php" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left me-1"></i>Back</a>
+  <a href="/jobs.php" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left me-1"></i>Back</a>
 </div>
 
 <?php if ($errors): ?>
@@ -80,7 +80,7 @@ require_once __DIR__ . '/includes/header.php';
     <div class="col-md-4">
       <label class="form-label">Required Education</label>
       <select name="required_education" class="form-select">
-        <option value="">— Any —</option>
+        <option value="">"” Any "”</option>
         <?php foreach ($eduLevels as $el): ?>
         <option value="<?= $el ?>" <?= (($_POST['required_education'] ?? '') === $el) ? 'selected' : '' ?>><?= $el ?></option>
         <?php endforeach; ?>
@@ -95,11 +95,11 @@ require_once __DIR__ . '/includes/header.php';
       <input type="number" name="slots" class="form-control" min="1" value="<?= h($_POST['slots'] ?? '1') ?>">
     </div>
     <div class="col-md-4">
-      <label class="form-label">Salary Min (₱)</label>
+      <label class="form-label">Salary Min (â‚±)</label>
       <input type="number" name="salary_min" class="form-control" min="0" value="<?= h($_POST['salary_min'] ?? '') ?>">
     </div>
     <div class="col-md-4">
-      <label class="form-label">Salary Max (₱)</label>
+      <label class="form-label">Salary Max (â‚±)</label>
       <input type="number" name="salary_max" class="form-control" min="0" value="<?= h($_POST['salary_max'] ?? '') ?>">
     </div>
     <div class="col-md-12">
@@ -112,9 +112,10 @@ require_once __DIR__ . '/includes/header.php';
 
   <div class="d-flex gap-2">
     <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg me-1"></i>Save Vacancy</button>
-    <a href="/peso-system/jobs.php" class="btn btn-outline-secondary">Cancel</a>
+    <a href="/jobs.php" class="btn btn-outline-secondary">Cancel</a>
   </div>
 </form>
 </div>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
+

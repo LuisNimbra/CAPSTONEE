@@ -9,7 +9,7 @@ $pdo = db();
 $stmt = $pdo->prepare('SELECT * FROM job_vacancies WHERE id = ?');
 $stmt->execute([$id]);
 $j = $stmt->fetch();
-if (!$j) { header('Location: /peso-system/jobs.php'); exit; }
+if (!$j) { header('Location: /jobs.php'); exit; }
 
 $existingSkills = implode(', ', getJobSkills($id));
 $errors = [];
@@ -42,20 +42,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         foreach ($skills as $skill) $skillStmt->execute([$id, $skill]);
 
         logActivity('Edit Job', 'Jobs', "Edited job ID: $id");
-        header('Location: /peso-system/job_view.php?id=' . $id . '&updated=1');
+        header('Location: /job_view.php?id=' . $id . '&updated=1');
         exit;
     }
     $j = array_merge($j, $f);
 }
 
 $eduLevels = ['Elementary','High School','Vocational','College','Post-Graduate'];
-$pageTitle  = 'Edit Job Vacancy — PESO CSJDM DSS';
+$pageTitle  = 'Edit Job Vacancy "” PESO CSJDM DSS';
 require_once __DIR__ . '/includes/header.php';
 ?>
 
 <div class="page-header">
   <h4><i class="bi bi-pencil-square me-2 text-primary"></i>Edit Job Vacancy</h4>
-  <a href="/peso-system/job_view.php?id=<?= $id ?>" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left me-1"></i>Back</a>
+  <a href="/job_view.php?id=<?= $id ?>" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left me-1"></i>Back</a>
 </div>
 
 <?php if ($errors): ?>
@@ -89,7 +89,7 @@ require_once __DIR__ . '/includes/header.php';
     <div class="col-md-3">
       <label class="form-label">Required Education</label>
       <select name="required_education" class="form-select">
-        <option value="">— Any —</option>
+        <option value="">"” Any "”</option>
         <?php foreach ($eduLevels as $el): ?>
         <option value="<?= $el ?>" <?= ($j['required_education'] === $el) ? 'selected' : '' ?>><?= $el ?></option>
         <?php endforeach; ?>
@@ -127,9 +127,10 @@ require_once __DIR__ . '/includes/header.php';
 
   <div class="d-flex gap-2">
     <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg me-1"></i>Update Vacancy</button>
-    <a href="/peso-system/job_view.php?id=<?= $id ?>" class="btn btn-outline-secondary">Cancel</a>
+    <a href="/job_view.php?id=<?= $id ?>" class="btn btn-outline-secondary">Cancel</a>
   </div>
 </form>
 </div>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
+

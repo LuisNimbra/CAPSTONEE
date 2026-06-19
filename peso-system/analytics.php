@@ -35,7 +35,7 @@ $monthly = $pdo->query("
     GROUP BY ym, mo ORDER BY ym
 ")->fetchAll();
 
-$pageTitle = 'Analytics Dashboard — PESO CSJDM DSS';
+$pageTitle = 'Analytics Dashboard "” PESO CSJDM DSS';
 require_once __DIR__ . '/includes/header.php';
 ?>
 
@@ -128,3 +128,4 @@ new Chart(document.getElementById('trendChart'), {
 </script>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
+

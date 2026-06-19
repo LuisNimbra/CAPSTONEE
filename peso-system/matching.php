@@ -24,7 +24,7 @@ if ($selectedJobId) {
     $results = $results->fetchAll();
 }
 
-$pageTitle = 'AI Job Matching — PESO CSJDM DSS';
+$pageTitle = 'AI Job Matching "” PESO CSJDM DSS';
 require_once __DIR__ . '/includes/header.php';
 ?>
 
@@ -38,10 +38,10 @@ require_once __DIR__ . '/includes/header.php';
     <div class="card stat-card p-3">
       <h6 class="fw-semibold mb-3"><i class="bi bi-briefcase me-2 text-primary"></i>Select Job Vacancy</h6>
       <select id="jobSelect" class="form-select mb-3" onchange="updateJobPreview(this.value)">
-        <option value="">— Choose a vacancy —</option>
+        <option value="">"” Choose a vacancy "”</option>
         <?php foreach ($jobs as $job): ?>
         <option value="<?= $job['id'] ?>" <?= ($selectedJobId === $job['id']) ? 'selected' : '' ?>>
-          <?= h($job['job_title']) ?> — <?= h($job['company']) ?>
+          <?= h($job['job_title']) ?> "” <?= h($job['company']) ?>
         </option>
         <?php endforeach; ?>
       </select>
@@ -102,13 +102,13 @@ function renderResultsTable(array $rows): string {
         }
         $statusBadge = ['pending'=>'secondary','referred'=>'success','rejected'=>'danger'][$r['status']] ?? 'secondary';
         $referBtn = $r['status'] === 'pending'
-            ? '<a href="/peso-system/api/matching.php?action=refer&id=' . $r['id'] . '" class="btn btn-sm btn-success">Refer</a>'
+            ? '<a href="/api/matching.php?action=refer&id=' . $r['id'] . '" class="btn btn-sm btn-success">Refer</a>'
             : '<span class="text-muted small">' . ucfirst($r['status']) . '</span>';
 
         $html .= "<tr>
             <td><span class='badge {$rankCls} px-2'>#{$rankN}</span></td>
             <td>
-              <a href='/peso-system/applicant_view.php?id={$r['applicant_id']}' class='fw-semibold text-decoration-none'>
+              <a href='/applicant_view.php?id={$r['applicant_id']}' class='fw-semibold text-decoration-none'>
                 " . htmlspecialchars($r['first_name'] . ' ' . $r['last_name']) . "
               </a><br>
               <small class='text-muted'>" . htmlspecialchars($r['barangay'] ?? '') . "</small>
@@ -157,12 +157,19 @@ function generateMatches() {
     document.getElementById('btnGenerate').disabled = true;
     document.getElementById('generateStatus').textContent = 'Running ML model…';
 
-    fetch('/peso-system/api/matching.php', {
+    fetch('/api/matching.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'generate', job_id: parseInt(jobId), top_n: parseInt(topN) })
     })
-    .then(r => r.json())
+    .then(r => {
+        if (r.status === 401) {
+            document.getElementById('btnGenerate').disabled = false;
+            showToast('Session expired. Please refresh the page and log in again.', 'warning');
+            return Promise.reject('auth');
+        }
+        return r.json();
+    })
     .then(data => {
         document.getElementById('btnGenerate').disabled = false;
         document.getElementById('generateStatus').textContent = '';
@@ -176,9 +183,11 @@ function generateMatches() {
             showToast(data.error || 'Failed to generate matches.', 'danger');
         }
     })
-    .catch(() => {
+    .catch(err => {
+        if (err === 'auth') return;
         document.getElementById('btnGenerate').disabled = false;
-        showToast('Error connecting to ML service. Ensure the Flask API is running.', 'danger');
+        document.getElementById('generateStatus').textContent = '';
+        showToast('Connection error. Please refresh the page and try again.', 'danger');
     });
 }
 
@@ -188,3 +197,4 @@ if (urlJobId) updateJobPreview(urlJobId);
 </script>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
+

@@ -94,3 +94,29 @@ body { font-family: 'Segoe UI', sans-serif; background: #f4f6fb; }
 @media (max-width: 768px) {
   #sidebar { display: none; }
 }
+
+/* ── Sector badge override (purple not in Bootstrap) ── */
+.badge.bg-purple, .text-purple { color: #6f42c1 !important; }
+.bg-purple.bg-opacity-10 { background-color: rgba(111,66,193,.1) !important; }
+.border-purple { border-color: rgba(111,66,193,.4) !important; }
+
+/* ── Certification rows ── */
+.cert-row { align-items: center; }
+
+/* ── Confirmation badges ── */
+.confirm-Pending         { background:#fff3cd; color:#856404; }
+.confirm-Hired           { background:#d4edda; color:#155724; }
+.confirm-Declined        { background:#f8d7da; color:#721c24; }
+.confirm-No-Show         { background:#d1ecf1; color:#0c5460; }
+.confirm-Under-Evaluation{ background:#e2e3e5; color:#383d41; }
+
+/* ── Print / Save-as-PDF ── */
+@media print {
+  #sidebar, nav.navbar, .no-print, .btn, .page-header .btn, .modal { display: none !important; }
+  body { padding: 0 !important; background: #fff !important; }
+  main { padding: 0 !important; }
+  .stat-card { box-shadow: none !important; border: 1px solid #ddd !important; }
+  a { text-decoration: none !important; color: #000 !important; }
+  .table { font-size: .8rem; }
+  .page-header { margin-bottom: .5rem; }
+}

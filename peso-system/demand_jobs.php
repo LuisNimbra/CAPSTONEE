@@ -28,7 +28,7 @@ $requiredSkills = $pdo->query("
     GROUP BY skill ORDER BY cnt DESC LIMIT 12
 ")->fetchAll();
 
-$pageTitle = 'Most In-Demand Jobs — PESO CSJDM DSS';
+$pageTitle = 'Most In-Demand Jobs "” PESO CSJDM DSS';
 require_once __DIR__ . '/includes/header.php';
 ?>
 
@@ -79,7 +79,7 @@ require_once __DIR__ . '/includes/header.php';
 
 <!-- Full table -->
 <div class="card stat-card p-3">
-  <h6 class="fw-semibold mb-3"><i class="bi bi-table me-2 text-primary"></i>In-Demand Jobs — Full List</h6>
+  <h6 class="fw-semibold mb-3"><i class="bi bi-table me-2 text-primary"></i>In-Demand Jobs "” Full List</h6>
   <div class="table-responsive">
     <table class="table table-hover table-sm align-middle">
       <thead class="table-light"><tr><th>Rank</th><th>Job Title</th><th>Company</th><th>Applications</th><th>Avg Match Score</th><th>Salary</th><th>Status</th></tr></thead>
@@ -98,7 +98,7 @@ require_once __DIR__ . '/includes/header.php';
           <?php if ($pct > 0): ?>
           <span class="score-badge <?= $pct >= 70 ? 'score-high' : 'score-mid' ?>"><?= $pct ?>%</span>
           <?php else: ?>
-          <span class="text-muted small">—</span>
+          <span class="text-muted small">"”</span>
           <?php endif; ?>
         </td>
         <td><?= formatSalary($job['salary_min'], $job['salary_max']) ?></td>
@@ -132,3 +132,4 @@ new Chart(document.getElementById('reqSkillsChart'), {
 </script>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
+

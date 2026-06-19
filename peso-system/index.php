@@ -1,1 +1,2 @@
-<?php header('Location: /peso-system/login.php'); exit; ?>
+<?php header('Location: /login.php'); exit; ?>
+

@@ -6,7 +6,18 @@ if (session_status() === PHP_SESSION_NONE) {
 
 function requireLogin(): void {
     if (empty($_SESSION['user_id'])) {
-        header('Location: /peso-system/login.php');
+        $isAjax = (
+            (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') ||
+            str_contains($_SERVER['HTTP_ACCEPT'] ?? '', 'application/json') ||
+            str_contains($_SERVER['CONTENT_TYPE'] ?? '', 'application/json')
+        );
+        if ($isAjax) {
+            http_response_code(401);
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'error' => 'Session expired. Please refresh the page and log in again.']);
+            exit;
+        }
+        header('Location: /login.php');
         exit;
     }
 }
@@ -50,3 +61,4 @@ function verifyCsrf(): void {
 function h(string $s): string {
     return htmlspecialchars($s, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 }
+

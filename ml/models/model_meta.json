@@ -1,0 +1,22 @@
+{
+  "model": "KNN",
+  "accuracy": 0.5339805825242718,
+  "precision": 0.5007364337240353,
+  "recall": 0.5339805825242718,
+  "f1": 0.5105078017965978,
+  "cv_results": {
+    "Naive Bayes": 0.2123397435897436,
+    "Decision Tree": 0.28044871794871795,
+    "KNN": 0.3205128205128205
+  },
+  "classes": [
+    "Accountant",
+    "Administrative Assistant",
+    "Cashier",
+    "Customer Service Representative",
+    "Data Entry Clerk",
+    "Sales Associate",
+    "Software Developer",
+    "Warehouse Staff"
+  ]
+}

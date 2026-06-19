@@ -107,7 +107,7 @@ $models = $pdo->query("SELECT * FROM ml_models ORDER BY trained_at DESC LIMIT 10
 
 $mlStatus = mlApiGet('/status');
 
-$pageTitle = 'Dataset & ML — PESO CSJDM DSS';
+$pageTitle = 'Dataset & ML &mdash; PESO CSJDM DSS';
 require_once __DIR__ . '/includes/header.php';
 ?>
 
@@ -145,16 +145,16 @@ require_once __DIR__ . '/includes/header.php';
   <div class="col-md-6">
     <div class="card stat-card p-3">
       <h6 class="fw-semibold mb-3"><i class="bi bi-cpu me-2 text-primary"></i>Train ML Model</h6>
-      <p class="text-muted small mb-3">Trains Naïve Bayes, Decision Tree, and K-Nearest Neighbors models using 10-Fold Cross Validation. The best-performing model is saved and used for applicant ranking.</p>
+      <p class="text-muted small mb-3">Trains Na&iuml;ve Bayes, Decision Tree, and K-Nearest Neighbors models using 10-Fold Cross Validation. The best-performing model is saved and used for applicant ranking.</p>
 
       <?php if ($mlStatus): ?>
       <div class="alert alert-success py-2 mb-3">
-        <small><i class="bi bi-check-circle me-1"></i>Flask API is online — <strong><?= h($mlStatus['model'] ?? 'No model') ?></strong>
+        <small><i class=”bi bi-check-circle me-1”></i>Flask API is online &mdash; <strong><?= h($mlStatus['model'] ?? 'No model') ?></strong>
         <?php if (isset($mlStatus['accuracy'])): ?> | Accuracy: <?= round($mlStatus['accuracy'] * 100, 1) ?>%<?php endif; ?></small>
       </div>
       <?php else: ?>
       <div class="alert alert-warning py-2 mb-3">
-        <small><i class="bi bi-exclamation-triangle me-1"></i>Flask API is offline. Start it with: <code>python ml/app.py</code></small>
+        <small><i class="bi bi-exclamation-triangle me-1"></i>Flask API is offline. Start it with: <code>start_ml_api.bat</code></small>
       </div>
       <?php endif; ?>
 
@@ -205,7 +205,7 @@ require_once __DIR__ . '/includes/header.php';
         <td><?= h($u['original_name']) ?></td>
         <td><?= $u['record_count'] ?></td>
         <td><span class="badge bg-<?= $u['status'] === 'processed' ? 'success' : 'secondary' ?>"><?= ucfirst($u['status']) ?></span></td>
-        <td><?= h($u['full_name'] ?? '—') ?></td>
+        <td><?= h($u['full_name'] ?? '&mdash;') ?></td>
         <td class="text-muted small"><?= date('M d, Y H:i', strtotime($u['uploaded_at'])) ?></td>
       </tr>
       <?php endforeach; ?>
@@ -216,3 +216,4 @@ require_once __DIR__ . '/includes/header.php';
 </div>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
+

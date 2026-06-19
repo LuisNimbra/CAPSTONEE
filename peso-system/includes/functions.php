@@ -1,6 +1,55 @@
 <?php
 require_once __DIR__ . '/../config/db.php';
 
+const SECTORS = [
+    'None', 'PWD', '4Ps Beneficiary', 'Senior Citizen',
+    'OFW Returnee', 'Displaced Worker', 'Indigenous People', 'Solo Parent',
+];
+
+const SECTOR_COLORS = [
+    'None'              => 'secondary',
+    'PWD'               => 'primary',
+    '4Ps Beneficiary'   => 'success',
+    'Senior Citizen'    => 'warning',
+    'OFW Returnee'      => 'info',
+    'Displaced Worker'  => 'danger',
+    'Indigenous People' => 'dark',
+    'Solo Parent'       => 'purple',
+];
+
+function sectorBadge(string $sector): string {
+    if (!$sector || $sector === 'None') return '';
+    $color = SECTOR_COLORS[$sector] ?? 'secondary';
+    return '<span class="badge bg-' . $color . ' bg-opacity-10 text-' . $color . ' border border-' . $color . ' border-opacity-25">' . htmlspecialchars($sector) . '</span>';
+}
+
+function getApplicantCertifications(int $applicantId): array {
+    $stmt = db()->prepare('SELECT * FROM applicant_certifications WHERE applicant_id = ? ORDER BY date_issued DESC, id DESC');
+    $stmt->execute([$applicantId]);
+    return $stmt->fetchAll();
+}
+
+function saveCertifications(int $applicantId, array $post): void {
+    $pdo = db();
+    $pdo->prepare('DELETE FROM applicant_certifications WHERE applicant_id = ?')->execute([$applicantId]);
+    $names   = $post['cert_name']         ?? [];
+    $bodies  = $post['cert_issuing_body'] ?? [];
+    $issued  = $post['cert_date_issued']  ?? [];
+    $expiry  = $post['cert_expiry_date']  ?? [];
+    $stmt = $pdo->prepare('INSERT INTO applicant_certifications (applicant_id, cert_name, issuing_body, date_issued, expiry_date) VALUES (?,?,?,?,?)');
+    foreach ($names as $i => $name) {
+        if (trim($name) !== '') {
+            $stmt->execute([
+                $applicantId,
+                trim($name),
+                trim($bodies[$i] ?? ''),
+                $issued[$i] ?: null,
+                $expiry[$i]  ?: null,
+            ]);
+        }
+    }
+}
+
 function educationRank(string $level): int {
     return match($level) {
         'Elementary'   => 1,
@@ -65,8 +114,8 @@ function mlApiGet(string $endpoint): ?array {
 
 function formatSalary(?float $min, ?float $max): string {
     if (!$min && !$max) return 'Negotiable';
-    if ($min && $max)   return '₱' . number_format($min) . ' – ₱' . number_format($max);
-    return '₱' . number_format($min ?: $max);
+    if ($min && $max)   return 'â‚±' . number_format($min) . ' "“ â‚±' . number_format($max);
+    return 'â‚±' . number_format($min ?: $max);
 }
 
 function timeSince(string $datetime): string {
@@ -83,3 +132,4 @@ function jsonResponse(array $data, int $code = 200): never {
     echo json_encode($data);
     exit;
 }
+

@@ -9,7 +9,7 @@ $pdo = db();
 $stmt = $pdo->prepare('SELECT * FROM job_vacancies WHERE id = ?');
 $stmt->execute([$id]);
 $j = $stmt->fetch();
-if (!$j) { header('Location: /peso-system/jobs.php'); exit; }
+if (!$j) { header('Location: /jobs.php'); exit; }
 
 $jobSkills = getJobSkills($id);
 
@@ -24,7 +24,7 @@ $matches = $pdo->prepare("
 $matches->execute([$id]);
 $matchList = $matches->fetchAll();
 
-$pageTitle = h($j['job_title']) . ' — PESO CSJDM DSS';
+$pageTitle = h($j['job_title']) . ' "” PESO CSJDM DSS';
 require_once __DIR__ . '/includes/header.php';
 ?>
 
@@ -35,9 +35,9 @@ require_once __DIR__ . '/includes/header.php';
 <div class="page-header">
   <h4><i class="bi bi-briefcase-fill me-2 text-primary"></i><?= h($j['job_title']) ?></h4>
   <div class="d-flex gap-2">
-    <a href="/peso-system/matching.php?job_id=<?= $id ?>" class="btn btn-success btn-sm"><i class="bi bi-cpu me-1"></i>Generate Matches</a>
-    <a href="/peso-system/job_edit.php?id=<?= $id ?>" class="btn btn-outline-primary btn-sm"><i class="bi bi-pencil me-1"></i>Edit</a>
-    <a href="/peso-system/jobs.php" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left me-1"></i>Back</a>
+    <a href="/matching.php?job_id=<?= $id ?>" class="btn btn-success btn-sm"><i class="bi bi-cpu me-1"></i>Generate Matches</a>
+    <a href="/job_edit.php?id=<?= $id ?>" class="btn btn-outline-primary btn-sm"><i class="bi bi-pencil me-1"></i>Edit</a>
+    <a href="/jobs.php" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left me-1"></i>Back</a>
   </div>
 </div>
 
@@ -84,7 +84,7 @@ require_once __DIR__ . '/includes/header.php';
     <div class="card stat-card p-3">
       <div class="d-flex justify-content-between align-items-center mb-3">
         <h6 class="fw-semibold text-primary mb-0"><i class="bi bi-trophy me-2"></i>Ranked Applicants</h6>
-        <a href="/peso-system/matching.php?job_id=<?= $id ?>" class="btn btn-sm btn-outline-success">
+        <a href="/matching.php?job_id=<?= $id ?>" class="btn btn-sm btn-outline-success">
           <i class="bi bi-cpu me-1"></i>Re-generate
         </a>
       </div>
@@ -100,7 +100,7 @@ require_once __DIR__ . '/includes/header.php';
           ?>
           <tr>
             <td><span class="badge <?= $rankCls ?>">#<?= $m['rank_position'] ?></span></td>
-            <td><a href="/peso-system/applicant_view.php?id=<?= $m['applicant_id'] ?>" class="fw-semibold text-decoration-none">
+            <td><a href="/applicant_view.php?id=<?= $m['applicant_id'] ?>" class="fw-semibold text-decoration-none">
               <?= h($m['first_name'] . ' ' . $m['last_name']) ?>
             </a></td>
             <td><?= h($m['education_level']) ?></td>
@@ -109,7 +109,7 @@ require_once __DIR__ . '/includes/header.php';
             <td><span class="badge bg-<?= ['pending'=>'secondary','referred'=>'success','rejected'=>'danger'][$m['status']] ?>"><?= ucfirst($m['status']) ?></span></td>
             <td>
               <?php if ($m['status'] === 'pending'): ?>
-              <a href="/peso-system/api/matching.php?action=refer&id=<?= $m['id'] ?>" class="btn btn-xs btn-outline-success btn-sm">Refer</a>
+              <a href="/api/matching.php?action=refer&id=<?= $m['id'] ?>" class="btn btn-xs btn-outline-success btn-sm">Refer</a>
               <?php endif; ?>
             </td>
           </tr>
@@ -125,3 +125,4 @@ require_once __DIR__ . '/includes/header.php';
 </div>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
+
