@@ -42,15 +42,3 @@ function initTableSearch(inputId, tableId) {
   });
 }
 
-// ── Score badge ──────────────────────────────────────────────
-function scoreBadge(score) {
-  const pct = Math.round(score * 100);
-  const cls = pct >= 70 ? 'score-high' : pct >= 40 ? 'score-mid' : 'score-low';
-  return `<span class="score-badge ${cls}">${pct}%</span>`;
-}
-
-// ── Rank badge ───────────────────────────────────────────────
-function rankBadge(rank) {
-  const cls = ['rank-1', 'rank-2', 'rank-3'][rank - 1] || 'rank-n';
-  return `<span class="badge ${cls} px-2 py-1">#${rank}</span>`;
-}

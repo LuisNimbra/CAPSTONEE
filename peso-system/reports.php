@@ -438,4 +438,5 @@ function exportAllTables() {
 }
 </script>
 
+<script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
